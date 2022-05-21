@@ -37,10 +37,9 @@ public class IcwPlayer : MonoBehaviour
 
     private void TryToFill(Vector2 coord)
     {
-        IcwGameClass.GameTile gmt = IcwGameClass.GetTile(floor.WorldToCell(coord));
-        if (gmt != null) return;
+        TileBase currtb = floor.GetTile(floor.WorldToCell(coord));
+        if (currtb != null) return;
         grid.GetComponent<IcwGrid>().AddFloor(Vector2Int.FloorToInt(coord));
-
     }
     private void FixedUpdate()
     {

@@ -13,6 +13,12 @@ public class IcwGameClass
         public Vector2Int coords;
     }
 
+    public static bool IsInField(Vector3Int coords) 
+    {
+        bool res = (coords.x > 1 && coords.x < sizeX - 2 && coords.y > 1 && coords.y < sizeY - 2);
+        return res;
+    }
+
 
     public static List<GameTile> objects = new();
     public static GameTile GetTile(int x, int y)
