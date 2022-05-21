@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class IcwGameClass
 {
-    public static int sizeX = 60;
-    public static int sizeY = 60;
+    public static int sizeX = 40;
+    public static int sizeY = 40;
 
     public class GameTile
     {

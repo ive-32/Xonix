@@ -61,6 +61,8 @@
     <Compile Include="Assets\Scripts\icwGame.cs" />
     <Compile Include="Assets\Scripts\IcwEnemy.cs" />
     <Compile Include="Assets\Scripts\IcwPlayer.cs" />
+    <Compile Include="Assets\Scripts\IcwEnemyDestroyer.cs" />
+    <Compile Include="Assets\Scripts\IcwCamera.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

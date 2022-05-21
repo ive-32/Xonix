@@ -50,14 +50,25 @@ public class IcwGrid : MonoBehaviour
             for (int i = IcwGameClass.sizeX - 2; i < IcwGameClass.sizeX ; i++) Addtile(basetile, new Vector2Int(i, j));
         }
 
-        GameObject enemy = GetPrefabByName("Enemy");
-        Vector2Int enemypos = new(Random.Range(3, IcwGameClass.sizeX - 3), Random.Range(3, IcwGameClass.sizeY - 3));
-        GameObject bd = Addtile(enemy, enemypos);
-        Rigidbody2D rg2d = bd.GetComponent<Rigidbody2D>();
-        Vector3 vel = Random.insideUnitCircle.normalized * 5.0f;
-        rg2d.velocity = vel;
+        {
+            GameObject enemy = GetPrefabByName("Enemy");
+            Vector2Int enemypos = new(Random.Range(3, IcwGameClass.sizeX - 3), Random.Range(3, IcwGameClass.sizeY - 3));
+            GameObject bd = Addtile(enemy, enemypos);
+            Rigidbody2D rg2d = bd.GetComponent<Rigidbody2D>();
+            Vector3 vel = Random.insideUnitCircle.normalized * 5.0f;
+            rg2d.velocity = vel;
+        }
+        {
+            GameObject enemy = GetPrefabByName("EnemyDestroyer");
+            Vector2Int enemypos = new(Random.Range(3, IcwGameClass.sizeX - 3), Random.Range(3, IcwGameClass.sizeY - 3));
+            GameObject bd = Addtile(enemy, enemypos);
+            Rigidbody2D rg2d = bd.GetComponent<Rigidbody2D>();
+            Vector3 vel = Random.insideUnitCircle.normalized * 5.0f;
+            rg2d.velocity = vel;
+        }
+
     }
 
-    
+
 
 }
