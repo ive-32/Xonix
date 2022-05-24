@@ -1,7 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using static IcwGame;
+
 
 public class IcwPlayer : MonoBehaviour
 {
@@ -10,39 +10,43 @@ public class IcwPlayer : MonoBehaviour
     public GameObject grid;
 
     public float playerspeed = 10;
-    Vector2 playervelocity = Vector2.zero;
-    Vector2 currentpos = Vector2.zero;
+    private Vector2 playervelocity = Vector2.zero;
+    public Vector2 startpositionbeforefloat;
+    public Vector2 PlayerVelocity 
+    { 
+        get { return playervelocity; } 
+        set { currentpos = AttachToTile(currentpos); playervelocity = value; } 
+    }
+    public Vector2 currentpos = Vector2.zero;
 
     void Start()
     {
         rg2d = this.GetComponent<Rigidbody2D>();
-        transform.position = floor.GetCellCenterWorld(new Vector3Int(IcwGameClass.sizeX / 2, 1, 0));
+        transform.position = floor.GetCellCenterWorld(new Vector3Int(IcwGame.sizeX / 2, 1, 0));
         currentpos = transform.position;
+        startpositionbeforefloat = currentpos;
     }
-    private bool CheckCurrentPos(Vector2 currentpos)
+    private bool PlayerCanMove(Vector2 currentpos)
     {
-        Vector2 checkedpos = FixCurrentPos(currentpos);
+        Vector2 checkedpos = AttachToTile(currentpos);
         bool res = true;
         res &= checkedpos.x >= 0;
-        res &= checkedpos.x < IcwGameClass.sizeX;
+        res &= checkedpos.x < IcwGame.sizeX;
         res &= checkedpos.y >= 0;
-        res &= checkedpos.y < IcwGameClass.sizeY;
+        res &= checkedpos.y < IcwGame.sizeY;
 
         return res;
     }
-    private Vector2 FixCurrentPos(Vector2 currentpos)
+    private Vector2 AttachToTile(Vector2 currentpos)
     {
         return floor.GetCellCenterWorld(floor.WorldToCell(currentpos));
     }
 
-    private void TryToFill(Vector2 coord)
-    {
-        TileBase currtb = floor.GetTile(floor.WorldToCell(coord));
-        if (currtb != null) return;
-        grid.GetComponent<IcwGrid>().AddFloor(Vector2Int.FloorToInt(coord));
-    }
+
+
     private void FixedUpdate()
     {
+        Vector2 previouspos = currentpos;
         float x = Input.GetAxisRaw("Horizontal");
         float y = Input.GetAxisRaw("Vertical");
 
@@ -58,22 +62,20 @@ public class IcwPlayer : MonoBehaviour
 
             if (playervelocity!=vel)
             {
-                currentpos = FixCurrentPos(currentpos);
-                playervelocity = vel;
+                PlayerVelocity = vel;
                 Input.ResetInputAxes();
             }
         }
 
         currentpos += playerspeed * Time.fixedDeltaTime * playervelocity;
-        if (!CheckCurrentPos(currentpos))
+        if (!PlayerCanMove(currentpos))
         {
-            currentpos -= playerspeed * Time.fixedDeltaTime * playervelocity;
-            currentpos = FixCurrentPos(currentpos);
-            playervelocity = Vector2.zero;
+            currentpos = previouspos;
+            PlayerVelocity = Vector2.zero;
             Input.ResetInputAxes();
         }
 
-        TryToFill(currentpos);
+        GameObject.Find("mainGame").GetComponent<IcwGame>().PlayerMovingLogic(previouspos,currentpos);
 
         rg2d.MovePosition(currentpos);
         

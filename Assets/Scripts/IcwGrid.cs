@@ -26,14 +26,8 @@ public class IcwGrid : MonoBehaviour
 
     private GameObject Addtile(GameObject tile, Vector2Int _coord)
     {
-        IcwGameClass.GameTile gametile;
-        gametile = new IcwGameClass.GameTile
-        {
-            coords = _coord,
-            body = Instantiate(tile, floor.GetCellCenterWorld(((Vector3Int)_coord)), Quaternion.identity)
-        };
-        IcwGameClass.objects.Add(gametile);
-        return gametile.body;
+        GameObject body = Instantiate(tile, floor.GetCellCenterWorld(((Vector3Int)_coord)), Quaternion.identity);
+        return body;
     }
 
     
@@ -42,34 +36,28 @@ public class IcwGrid : MonoBehaviour
     void Start()
     {
         floortile = IcwService.GetTileByName("Floor");
-        for (int i = 0; i < IcwGameClass.sizeX ; i++)
+        for (int i = 0; i < IcwGame.sizeX ; i++)
         {
             for (int j = 0; j < 2; j++) AddFloor(i, j); 
-            for (int j = IcwGameClass.sizeY - 2; j < IcwGameClass.sizeY; j++) AddFloor(i, j); 
+            for (int j = IcwGame.sizeY - 2; j < IcwGame.sizeY; j++) AddFloor(i, j); 
         }
         
-        for (int j = 2; j < IcwGameClass.sizeY - 2; j++)
+        for (int j = 2; j < IcwGame.sizeY - 2; j++)
         {
             for (int i = 0; i < 2; i++) AddFloor(i, j);
-            for (int i = IcwGameClass.sizeX - 2; i < IcwGameClass.sizeX ; i++) AddFloor(i, j);
+            for (int i = IcwGame.sizeX - 2; i < IcwGame.sizeX ; i++) AddFloor(i, j);
         }
 
         {
             GameObject enemy = IcwService.GetPrefabByName("Enemy");
-            Vector2Int enemypos = new(Random.Range(3, IcwGameClass.sizeX - 3), Random.Range(3, IcwGameClass.sizeY - 3));
+            Vector2Int enemypos = new(Random.Range(3, IcwGame.sizeX - 3), Random.Range(3, IcwGame.sizeY - 3));
             GameObject bd = Addtile(enemy, enemypos);
-            Rigidbody2D rg2d = bd.GetComponent<Rigidbody2D>();
-            Vector3 vel = Random.insideUnitCircle.normalized * 5.0f;
-            rg2d.velocity = vel;
         }
 
         {
             GameObject enemy = IcwService.GetPrefabByName("EnemyDestroyer");
-            Vector2Int enemypos = new(Random.Range(3, IcwGameClass.sizeX - 3), Random.Range(3, IcwGameClass.sizeY - 3));
+            Vector2Int enemypos = new(Random.Range(3, IcwGame.sizeX - 3), Random.Range(3, IcwGame.sizeY - 3));
             GameObject bd = Addtile(enemy, enemypos);
-            Rigidbody2D rg2d = bd.GetComponent<Rigidbody2D>();
-            Vector3 vel = Random.insideUnitCircle.normalized * 5.0f;
-            rg2d.velocity = vel;
         }
 
     }
