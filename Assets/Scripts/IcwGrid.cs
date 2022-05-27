@@ -13,18 +13,14 @@ public class IcwGrid : MonoBehaviour
     private TileBase floortile;
 
     // Start is called before the first frame update
-    public void AddFloor(Vector2Int _coord)
-    {
-        AddFloor(_coord.x, _coord.y);
-    }
-
+   
     public void AddFloor(int x, int y)
     {
         floor.SetTile(new Vector3Int(x, y, 0), floortile);
     }
 
 
-    private GameObject Addtile(GameObject tile, Vector2Int _coord)
+    private GameObject AddObjectAtTile(GameObject tile, Vector2Int _coord)
     {
         GameObject body = Instantiate(tile, floor.GetCellCenterWorld(((Vector3Int)_coord)), Quaternion.identity);
         return body;
@@ -35,7 +31,7 @@ public class IcwGrid : MonoBehaviour
 
     void Start()
     {
-        floortile = IcwService.GetTileByName("Floor");
+        floortile = IcwService.GetTileByName("FloorTile");
         for (int i = 0; i < IcwGame.sizeX ; i++)
         {
             for (int j = 0; j < 2; j++) AddFloor(i, j); 
@@ -51,14 +47,20 @@ public class IcwGrid : MonoBehaviour
         {
             GameObject enemy = IcwService.GetPrefabByName("Enemy");
             Vector2Int enemypos = new(Random.Range(3, IcwGame.sizeX - 3), Random.Range(3, IcwGame.sizeY - 3));
-            GameObject bd = Addtile(enemy, enemypos);
+            GameObject bd = AddObjectAtTile(enemy, enemypos);
         }
 
         {
             GameObject enemy = IcwService.GetPrefabByName("EnemyDestroyer");
             Vector2Int enemypos = new(Random.Range(3, IcwGame.sizeX - 3), Random.Range(3, IcwGame.sizeY - 3));
-            GameObject bd = Addtile(enemy, enemypos);
+            GameObject bd = AddObjectAtTile(enemy, enemypos);
         }
+        {
+            GameObject enemy = IcwService.GetPrefabByName("EnemySuperDestroyer");
+            Vector2Int enemypos = new(Random.Range(3, IcwGame.sizeX - 3), Random.Range(3, IcwGame.sizeY - 3));
+            GameObject bd = AddObjectAtTile(enemy, enemypos);
+        }
+
 
     }
 

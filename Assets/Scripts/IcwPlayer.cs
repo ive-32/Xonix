@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using static IcwGame;
+using Assets.Scripts;
 
 
 public class IcwPlayer : MonoBehaviour
@@ -18,9 +18,11 @@ public class IcwPlayer : MonoBehaviour
         set { currentpos = AttachToTile(currentpos); playervelocity = value; } 
     }
     public Vector2 currentpos = Vector2.zero;
+    private GameObject game;
 
     void Start()
     {
+        game = GameObject.Find("mainGame");
         rg2d = this.GetComponent<Rigidbody2D>();
         transform.position = floor.GetCellCenterWorld(new Vector3Int(IcwGame.sizeX / 2, 1, 0));
         currentpos = transform.position;
@@ -74,8 +76,9 @@ public class IcwPlayer : MonoBehaviour
             PlayerVelocity = Vector2.zero;
             Input.ResetInputAxes();
         }
-
-        GameObject.Find("mainGame").GetComponent<IcwGame>().PlayerMovingLogic(previouspos,currentpos);
+        
+        
+        game.GetComponent<IcwGame>().PlayerMovingLogic(previouspos,currentpos);
 
         rg2d.MovePosition(currentpos);
         

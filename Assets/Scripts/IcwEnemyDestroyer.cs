@@ -19,7 +19,7 @@ public class IcwEnemyDestroyer : IcwEnemy
             if (!IcwService.IsInField(tileposition)) continue;
             TileBase tb = floor.GetTile(tileposition);
             if (tb == null) continue;
-            if (tb.name == "FloorTile") floor.SetTile(tileposition, null);
+            if (tb.name == "FloorTile") game.PlaceFloorTile(tileposition.x, tileposition.y, null); 
         }
     }
 }

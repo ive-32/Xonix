@@ -6,26 +6,52 @@ using UnityEngine.Tilemaps;
 public class IcwEnemy : MonoBehaviour
 {
     protected Rigidbody2D rg2d;
-    Vector3 lastvelocity;
+    protected Vector2 lastvelocity;
+    protected Vector2 enemyvelocity;
     protected Tilemap floor;
     protected IcwGame game;
+    protected GameObject player;
+    protected IcwScores scores;
+    protected Vector3Int oldposition;
+    private float freezetime = 0;
+    private bool ivegotscoresonthismove;
 
     // Start is called before the first frame update
     protected virtual void Start()
     {
         game = GameObject.Find("mainGame").GetComponent<IcwGame>();
+        player = GameObject.Find("Player");
+        scores = GameObject.Find("Scores").GetComponent<IcwScores>();
         rg2d = GetComponent<Rigidbody2D>();
         floor = Object.FindObjectOfType<Tilemap>();
-        Vector3 vel = Random.insideUnitCircle.normalized * 5.0f;
-        rg2d.velocity = vel;
+        enemyvelocity = Random.insideUnitCircle.normalized * 5.0f;
+        rg2d.velocity = enemyvelocity;
+        oldposition = floor.WorldToCell(rg2d.position);
+        ivegotscoresonthismove = false;
     }
 
 
-    private void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
-        rg2d.velocity = rg2d.velocity.normalized * 5.0f;
-        lastvelocity = rg2d.velocity;
+        if (oldposition == floor.WorldToCell(rg2d.position)) freezetime += Time.fixedDeltaTime; else freezetime = 0;
+        if (freezetime >2 ) enemyvelocity = Random.insideUnitCircle.normalized * 5.0f;
+        rg2d.velocity = enemyvelocity;
+        oldposition = floor.WorldToCell(rg2d.position);
+        if (IcwGame.gamestate == IcwGame.EnumGameState.OnFlow && !ivegotscoresonthismove)
+        {
+            Vector3Int tileposition = floor.WorldToCell(this.gameObject.transform.position);
+            for (int i = -2; i < 3; i++)
+                for (int j = -2; j < 3; j++)
+                    if (floor.GetTile(new Vector3Int(tileposition.x + i, tileposition.y + j, 0)) == game.tracetile)
+                    {
+                        ivegotscoresonthismove = true;
+                        scores.AddScores(100, tileposition, true, comment: "!So Close!");
+                        i = j = 3;
+                    }
+        }
+        if (IcwGame.gamestate == IcwGame.EnumGameState.OnEarth) ivegotscoresonthismove = false;
     }
+
 
     protected virtual void OnCollisionEnter2D(Collision2D collision)
     {
@@ -41,7 +67,6 @@ public class IcwEnemy : MonoBehaviour
                 game.PlayerWasHit();
             }
         }
-        rg2d.velocity = Vector3.Reflect(lastvelocity, collisionnormal.normalized);
-
+        enemyvelocity = Vector2.Reflect(enemyvelocity, collisionnormal.normalized);
     }   
 }
