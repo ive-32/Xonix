@@ -5,9 +5,12 @@ using UnityEngine.Tilemaps;
 
 public class IcwEnemy : MonoBehaviour
 {
+    public const float enemyspeed = 5.0f;
     protected Rigidbody2D rg2d;
     protected Vector2 lastvelocity;
     protected Vector2 enemyvelocity;
+    protected GameObject FieldTiles;
+    protected GameObject TraceTiles;
     protected Tilemap floor;
     protected IcwGame game;
     protected GameObject player;
@@ -21,35 +24,42 @@ public class IcwEnemy : MonoBehaviour
     {
         game = GameObject.Find("mainGame").GetComponent<IcwGame>();
         player = GameObject.Find("Player");
+        FieldTiles = GameObject.Find("FieldTiles");
+        TraceTiles = GameObject.Find("TraceTiles");
         scores = GameObject.Find("Scores").GetComponent<IcwScores>();
+        transform.position = new(Random.Range(3, IcwGame.sizeX - 3), Random.Range(3, IcwGame.sizeY - 3));
         rg2d = GetComponent<Rigidbody2D>();
         floor = Object.FindObjectOfType<Tilemap>();
-        enemyvelocity = Random.insideUnitCircle.normalized * 5.0f;
+        enemyvelocity = Random.insideUnitCircle.normalized * enemyspeed;
         rg2d.velocity = enemyvelocity;
         oldposition = floor.WorldToCell(rg2d.position);
         ivegotscoresonthismove = false;
     }
-
+    
+    private void TryToGiveScore()
+    {
+        if (IcwGame.gamestate == IcwGame.EnumGameState.OnEarth) { ivegotscoresonthismove = false; return; }
+        if (ivegotscoresonthismove) return;
+        for (int i = 0; i < TraceTiles.transform.childCount; i++)
+        {
+            if (Vector3.Distance(TraceTiles.transform.GetChild(i).position, this.transform.position) < 2)
+            {
+                //scores.AddScores(100, scores.gameObject.transform.position, true, "!Sooo!\n!Close!");
+                scores.AddScores(100, player.GetComponent<IcwPlayer>().startpositionbeforefloat, true, "!Sooo!\n!Close!");
+                ivegotscoresonthismove = true;
+            }
+        }
+    }
 
     protected virtual void FixedUpdate()
     {
         if (oldposition == floor.WorldToCell(rg2d.position)) freezetime += Time.fixedDeltaTime; else freezetime = 0;
-        if (freezetime >2 ) enemyvelocity = Random.insideUnitCircle.normalized * 5.0f;
-        rg2d.velocity = enemyvelocity;
+        if (enemyvelocity.magnitude < enemyspeed) { enemyvelocity = enemyvelocity.normalized * enemyspeed; rg2d.velocity = enemyvelocity; }
+        if (freezetime > 2 ) { enemyvelocity = Random.insideUnitCircle.normalized * enemyspeed; rg2d.velocity = enemyvelocity; }
         oldposition = floor.WorldToCell(rg2d.position);
-        if (IcwGame.gamestate == IcwGame.EnumGameState.OnFlow && !ivegotscoresonthismove)
-        {
-            Vector3Int tileposition = floor.WorldToCell(this.gameObject.transform.position);
-            for (int i = -2; i < 3; i++)
-                for (int j = -2; j < 3; j++)
-                    if (floor.GetTile(new Vector3Int(tileposition.x + i, tileposition.y + j, 0)) == game.tracetile)
-                    {
-                        ivegotscoresonthismove = true;
-                        scores.AddScores(100, tileposition, true, comment: "!So Close!");
-                        i = j = 3;
-                    }
-        }
-        if (IcwGame.gamestate == IcwGame.EnumGameState.OnEarth) ivegotscoresonthismove = false;
+        enemyvelocity = rg2d.velocity;
+        TryToGiveScore();
+
     }
 
 
@@ -57,16 +67,14 @@ public class IcwEnemy : MonoBehaviour
     {
         List<ContactPoint2D> ctp2dlist = new();
         collision.GetContacts(ctp2dlist);
-        Vector2 collisionnormal = Vector2.zero;
-        foreach (ContactPoint2D ctp2d in ctp2dlist)
+        for (int i = 0; i < ctp2dlist.Count; i++)
         {
-            collisionnormal += ctp2d.normal;
-            Vector3Int tileposition = floor.WorldToCell(ctp2d.point - 0.1f * ctp2d.normal);
-            if (floor.GetTile(tileposition) == game.tracetile)
+            if (ctp2dlist[i].collider.transform.parent == TraceTiles.transform)
             {   //PlayerTrace hit by Enemy
                 game.PlayerWasHit();
+                return;
             }
         }
-        enemyvelocity = Vector2.Reflect(enemyvelocity, collisionnormal.normalized);
-    }   
+        
+    }
 }

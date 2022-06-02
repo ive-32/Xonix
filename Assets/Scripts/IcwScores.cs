@@ -18,12 +18,8 @@ public class IcwScores : MonoBehaviour
 
     private List<AtomicScoreShift> scoreshifts = new List<AtomicScoreShift>();
     private int realscores;
-    private GameObject splashscores;
-    
-    private bool findshiftscores(AtomicScoreShift sh)
-    {
-        return true;
-    }
+    public GameObject splashscores;
+   
     public int Scores { get { return realscores;  } set { realscores = value; } }
     public void AddScores(int value, Vector3 position = default, bool keepunique = false, string comment = "") 
     {
@@ -50,7 +46,7 @@ public class IcwScores : MonoBehaviour
     void Start()
     {
         realscores = 0;
-        splashscores = IcwService.GetPrefabByName("SplashScore");
+        //splashscores = IcwService.GetPrefabByName("SplashScore");
     }
     private void OptimizeScoreAppearing()
     {
@@ -64,8 +60,6 @@ public class IcwScores : MonoBehaviour
         {
             optimizedscoreshift.scoreposition += sh.scoreposition;
             optimizedscoreshift.scorevalue += sh.scorevalue;
-//            if (sh.comment != "")
-//                optimizedscoreshift.comment += sh.comment + "\n";
         }
         optimizedscoreshift.isoptimized = true;
         optimizedscoreshift.keepunique = true;

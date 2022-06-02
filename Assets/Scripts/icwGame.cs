@@ -11,61 +11,47 @@ public class IcwGame : MonoBehaviour
 
     static int fillroutine_deeplevel;
     private List<Vector3Int> fillpoints = new List<Vector3Int>();
+
     public enum EnumGameState { OnEarth, OnFlow }
-    public static int sizeX = 25;
-    public static int sizeY = 30;
-    public static EnumGameState gamestate = EnumGameState.OnEarth;
-    public TileBase floortile;
-    public TileBase tracetile;
-    public Tilemap floor;
-    public GameObject grid;
-    public int totalfilled = 0;
-    public float targetfilled = 0.85f;
-    float CurrentFilledPercent() => totalfilled / ((sizeX - 4.0f) * (sizeY - 4.0f));
+    public GameObject[] enemypool;
+    [System.NonSerialized] public static int sizeX = 25;
+    [System.NonSerialized] public static int sizeY = 30;
+    [System.NonSerialized] public static EnumGameState gamestate = EnumGameState.OnEarth;
+    [System.NonSerialized] public Tilemap floor;
+    [System.NonSerialized] public GameObject grid;
+    [System.NonSerialized] public IcwGrid gridclass;
+    [System.NonSerialized] public float targetfilled = 0.85f;
+    float CurrentFilledPercent() => gridclass.FieldTiles.transform.childCount / ((sizeX - 4.0f) * (sizeY - 4.0f));
 
     private GameObject player;
-    private GameObject tenscores;
-    private int[,] tmpfield = new int[sizeX, sizeY];
-    public static List<GameObject> objects = new();
     private IcwScores scores;
+    private int[,] tmpfieldprojection = new int[sizeX, sizeY];
+    
+
 
     private void Start()
     {
-
+        IcwLevels lvl = this.GetComponent<IcwLevels>();
+        lvl.LoadLevelInfo();
         player = GameObject.Find("Player");
         floor = GameObject.Find("FloorTileMap").GetComponent<Tilemap>();
         grid = GameObject.Find("Grid");
-        floortile = IcwService.GetTileByName("FloorTile");
-        tracetile = IcwService.GetTileByName("TraceTile");
+        gridclass = grid.GetComponent<IcwGrid>();
         scores = GameObject.Find("Scores").GetComponent<IcwScores>();
-        totalfilled = 0;
+
+        lvl.StartLevel();
     }
 
-    public void PlaceFloorTile(int x, int y, TileBase _atile)
+    public void ChangeTraceObjects(IcwGrid.FieldObjectsTypes newobject = IcwGrid.FieldObjectsTypes.Empty)
     {
-        Vector3Int tileposition = new Vector3Int(x, y, 0);
-        TileBase previoustile = floor.GetTile(tileposition);
-        //GameObject traceobject = IcwService.GetPrefabByName("TraceObject");
-        floor.SetTile(tileposition, _atile);
-        if ((_atile==tracetile || _atile == floortile) && previoustile == null)
+        int childcount = gridclass.TraceTiles.transform.childCount;
+        for (int i = childcount - 1; i>-1 ; i--)
         {
-            scores.AddScores(10, floor.GetCellCenterWorld(tileposition));
-            if (_atile==tracetile) 
-            {
-                //GameObject tmpgo;
-                //tmpgo = Instantiate(traceobject, floor.GetCellCenterWorld(tileposition), Quaternion.identity);
-                //tmpgo.GetComponent<Animator>().Play("TraceObject");
-                
-            }
+            Vector3 pos = gridclass.TraceTiles.transform.GetChild(i).position;
+            Object.Destroy(gridclass.TraceTiles.transform.GetChild(i).gameObject);
+            if (newobject != IcwGrid.FieldObjectsTypes.Empty) 
+                gridclass.AddTile(pos.x, pos.y, newobject);
         }
-        if (previoustile == tracetile)
-        {
-            //floor.ani
-            //GameObject[] traceobjects = IcwService.GetAllObjectsByTag(floor.GetCellCenterWorld(tileposition), "TraceTag");
-            //foreach (GameObject gm in traceobjects) Object.Destroy(gm);
-        }
-        if (_atile == null && previoustile == floortile) totalfilled--;
-        if (_atile == floortile && previoustile != floortile) totalfilled++;
     }
 
     public void PlayerWasHit()
@@ -73,29 +59,21 @@ public class IcwGame : MonoBehaviour
         player.GetComponent<IcwPlayer>().currentpos = player.GetComponent<IcwPlayer>().startpositionbeforefloat;
         player.GetComponent<IcwPlayer>().PlayerVelocity = Vector2.zero;
         gamestate = EnumGameState.OnEarth;
-        for (int i = 0; i < sizeX; i++)
-            for (int j = 0; j < sizeY; j++)
-            {
-                Vector3Int tmptilepos = new Vector3Int(i, j, 0);
-                if (floor.GetTile(tmptilepos) == tracetile)
-                {
-                    PlaceFloorTile(tmptilepos.x, tmptilepos.y, null);
-                }
-            }
+        ChangeTraceObjects();
     }
 
     private void FillFromPoint(Vector3Int startpoint, int value)
     {
         fillroutine_deeplevel++;
         if (startpoint.x >= sizeX || startpoint.x < 0 || startpoint.y >= sizeY || startpoint.y < 0) return;
-        if (tmpfield[startpoint.x, startpoint.y] != 0) return;
-        tmpfield[startpoint.x, startpoint.y] = value;
+        if (tmpfieldprojection[startpoint.x, startpoint.y] != 0) return;
+        tmpfieldprojection[startpoint.x, startpoint.y] = value;
         Vector3 tmpvector = Vector3.up;
         for (int i = 0; i < 9; i++)
         {
             tmpvector = Quaternion.AngleAxis(45, Vector3.forward) * tmpvector;
             Vector3Int tmpvectorint = Vector3Int.RoundToInt(tmpvector);
-            if (tmpfield[startpoint.x + tmpvectorint.x, startpoint.y + tmpvectorint.y] == 0)
+            if (tmpfieldprojection[startpoint.x + tmpvectorint.x, startpoint.y + tmpvectorint.y] == 0)
             {
                 if (fillroutine_deeplevel < 100) FillFromPoint(tmpvectorint + startpoint, value);
                 else fillpoints.Add(tmpvectorint + startpoint);
@@ -109,13 +87,9 @@ public class IcwGame : MonoBehaviour
         for (int i = 0; i < sizeX; i++)
             for (int j = 0; j < sizeY; j++)
             {   // fill tmparray field values and change tracetiles to floortiles
-                Vector3Int currtilepos = new Vector3Int(i, j, 0);
-                TileBase currtb = floor.GetTile(currtilepos);
-                if (currtb != null)
-                {
-                    tmpfield[i, j] = 2;
-                    if (currtb.name == "TraceTile") PlaceFloorTile(currtilepos.x, currtilepos.y, floortile);
-                } else tmpfield[i, j] = 0;
+                if (gridclass.fieldprojection[i, j] != (int)IcwGrid.FieldObjectsTypes.Empty)
+                     tmpfieldprojection[i, j] = 2;
+                else tmpfieldprojection[i, j] = 0;
             }
         // get contignous area for each enemy 
         GameObject[] enemylist = GameObject.FindGameObjectsWithTag("Enemy");
@@ -134,14 +108,17 @@ public class IcwGame : MonoBehaviour
         // fills areas where enemy not detected
         for (int i = 0; i < sizeX; i++)
             for (int j = 0; j < sizeY; j++)
-                if (tmpfield[i, j] == 0) PlaceFloorTile(i, j, floortile);
+                if (tmpfieldprojection[i, j] == 0) 
+                {   
+                    gridclass.AddFieldTile(i, j);
+                    scores.AddScores(10, floor.GetCellCenterWorld(new Vector3Int(i, j, 0)));
+                }
+        ChangeTraceObjects(IcwGrid.FieldObjectsTypes.Field);
     }
 
     public void PlayerOnTile(int x, int y)
     {
-        Vector3Int playerpositionvector = new Vector3Int(x, y, 0);
-        TileBase currtb = floor.GetTile(playerpositionvector);
-        if (currtb != null)
+        if (gridclass.fieldprojection[x,y]!=0)
         {
             if (gamestate != EnumGameState.OnEarth)
             {   //Finish flow
@@ -158,7 +135,8 @@ public class IcwGame : MonoBehaviour
         }
         if (gamestate == EnumGameState.OnFlow)
         {
-            PlaceFloorTile(playerpositionvector.x, playerpositionvector.y, tracetile);
+            gridclass.AddTraceTile(x, y);
+            scores.AddScores(1,floor.GetCellCenterWorld(new Vector3Int(x, y, 0)));
         }
         return;
     }
@@ -179,16 +157,17 @@ public class IcwGame : MonoBehaviour
     }
     void LevelWin()
     {
+        IcwLevels.levelnum++; 
         SceneManager.LoadScene("GameScene");
     }
 
     private void OnGUI()
     {
 
-        GUI.Label(new Rect(1,1,100,20), ((totalfilled )/((sizeX - 4.0f) * (sizeY - 4.0f))).ToString("00 %"));
+        /*GUI.Label(new Rect(1,1,100,20), ((totalfilled )/((sizeX - 4.0f) * (sizeY - 4.0f))).ToString("00 %"));
         GUI.Label(new Rect(1, 20, 100, 20), (totalfilled).ToString("0"));
         GUI.Label(new Rect(1, 40, 100, 20), ((sizeX - 4) * (sizeY - 4)).ToString("0"));
-
+        */
     }
 
 
