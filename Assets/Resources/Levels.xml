@@ -1,7 +1,5 @@
 <IcwXMLLevels>
   <level name="First horse" number = "1" background = "Space">
-    <enemy name ="Enemy"/>
-    <enemy name ="Enemy"/>
   </level>
   <level name="One more chance" number = "2" background = "Desert">
     <enemy name ="Enemy"/>

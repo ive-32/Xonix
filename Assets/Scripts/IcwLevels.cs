@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class IcwLevels : MonoBehaviour
 {
-    public static int levelnum = 3;
+    public static int levelnum = 0;
     public GameObject[] enemypool;
     public static int EnemyByName(string name) 
     { 

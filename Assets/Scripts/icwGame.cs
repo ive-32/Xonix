@@ -163,11 +163,7 @@ public class IcwGame : MonoBehaviour
 
     private void OnGUI()
     {
-
-        /*GUI.Label(new Rect(1,1,100,20), ((totalfilled )/((sizeX - 4.0f) * (sizeY - 4.0f))).ToString("00 %"));
-        GUI.Label(new Rect(1, 20, 100, 20), (totalfilled).ToString("0"));
-        GUI.Label(new Rect(1, 40, 100, 20), ((sizeX - 4) * (sizeY - 4)).ToString("0"));
-        */
+        scores.filledpercentsobject.value = Mathf.FloorToInt(CurrentFilledPercent()*100);
     }
 
 

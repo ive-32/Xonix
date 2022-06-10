@@ -17,14 +17,38 @@ public class IcwScores : MonoBehaviour
     }
 
     private List<AtomicScoreShift> scoreshifts = new List<AtomicScoreShift>();
-    private int realscores;
+    public IcwScreenText scoresobject;
+    public IcwScreenText filledpercentsobject;
+
+    public GameObject screentext;
     public GameObject splashscores;
+
    
-    public int Scores { get { return realscores;  } set { realscores = value; } }
+    public int Scores 
+    { 
+        get { if (scoresobject != null) return scoresobject.value; else return 0; } 
+        set { if (scoresobject != null) scoresobject.value = value; } 
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        GameObject body = Instantiate(screentext); 
+        scoresobject = body.GetComponent<IcwScreenText>();
+        scoresobject.nameofvalue = "Scores";
+        scoresobject.numline = 0;
+
+        body = Instantiate(screentext);
+        filledpercentsobject = body.GetComponent<IcwScreenText>();
+        filledpercentsobject.nameofvalue = "Completed %";
+        filledpercentsobject.valuechangespeed = 2;
+        filledpercentsobject.numline = 1;
+
+    }
     public void AddScores(int value, Vector3 position = default, bool keepunique = false, string comment = "") 
     {
         int currenttimeforscoreshift = Time.renderedFrameCount;
-        realscores += value;
+        scoresobject.value += value;
         AtomicScoreShift tmpscoreshift = new AtomicScoreShift();
         tmpscoreshift.currtime = Time.renderedFrameCount;
         tmpscoreshift.scoreposition = position;
@@ -40,14 +64,8 @@ public class IcwScores : MonoBehaviour
         }
         if (position == default) return;
         scoreshifts.Add(tmpscoreshift);
+    }
 
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
-        realscores = 0;
-        //splashscores = IcwService.GetPrefabByName("SplashScore");
-    }
     private void OptimizeScoreAppearing()
     {
         List<AtomicScoreShift> listtooptimization;
@@ -74,7 +92,7 @@ public class IcwScores : MonoBehaviour
     {
         if (scoreshifts.Count == 0) return;
         OptimizeScoreAppearing();
-        foreach(AtomicScoreShift scoreshift in scoreshifts)
+        foreach (AtomicScoreShift scoreshift in scoreshifts)
         {
             GameObject tmptenscores;
             tmptenscores = Instantiate(splashscores, scoreshift.scoreposition, Quaternion.identity);
@@ -84,7 +102,7 @@ public class IcwScores : MonoBehaviour
             Animator anim = tmptenscores.GetComponent<Animator>();
             anim.Play("SplashScore");
             Transform tmpaprtsys = tmptenscores.transform.Find("Particle System");
-            if (scoreshift.isoptimized|| scoreshift.comment!="") 
+            if (scoreshift.isoptimized || scoreshift.comment != "")
             {
                 tmpaprtsys.gameObject.SetActive(false);
                 tmptenscores.transform.localScale = new Vector3(3, 3, 0);
