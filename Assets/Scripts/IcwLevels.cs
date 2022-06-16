@@ -9,6 +9,8 @@ public class IcwLevels : MonoBehaviour
 {
     public static int levelnum = 0;
     public GameObject[] enemypool;
+    public Sprite[] backgroundpool;
+
     public static int EnemyByName(string name) 
     { 
         Dictionary<string, int> dict = new Dictionary<string, int>() 
@@ -53,6 +55,10 @@ public class IcwLevels : MonoBehaviour
                 Instantiate(enemypool[1]);
 
         }
+        GameObject bckg = GameObject.Find("Background");
+        //Sprite newbckg = Resources.Load<Sprite>(xmllevel[levelnum].background);
+        bckg.GetComponent<UnityEngine.UI.Image>().sprite = backgroundpool[Random.Range(0,3)]; 
+        bckg.GetComponent<UnityEngine.UI.Image>().color = new Color(Random.Range(128, 256), Random.Range(128, 256), Random.Range(128, 256)); //Random.ColorHSV();
     }
 }
 

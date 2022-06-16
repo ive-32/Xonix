@@ -161,6 +161,18 @@ public class IcwGame : MonoBehaviour
         SceneManager.LoadScene("GameScene");
     }
 
+    private void Update()
+    {
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            if (Input.GetKey(KeyCode.Home) || Input.GetKey(KeyCode.Escape) || Input.GetKey(KeyCode.Menu))
+            {
+                Application.Quit();
+                return;
+            }
+        }
+    }
+
     private void OnGUI()
     {
         scores.filledpercentsobject.value = Mathf.FloorToInt(CurrentFilledPercent()*100);

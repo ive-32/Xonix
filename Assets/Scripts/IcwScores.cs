@@ -19,6 +19,7 @@ public class IcwScores : MonoBehaviour
     private List<AtomicScoreShift> scoreshifts = new List<AtomicScoreShift>();
     public IcwScreenText scoresobject;
     public IcwScreenText filledpercentsobject;
+    public IcwScreenText serviceline;
 
     public GameObject screentext;
     public GameObject splashscores;
@@ -41,9 +42,18 @@ public class IcwScores : MonoBehaviour
         body = Instantiate(screentext);
         filledpercentsobject = body.GetComponent<IcwScreenText>();
         filledpercentsobject.nameofvalue = "Completed %";
-        filledpercentsobject.valuechangespeed = 2;
+        filledpercentsobject.valuechangespeed = 10;
         filledpercentsobject.numline = 1;
 
+        /*body = Instantiate(screentext);
+        serviceline = body.GetComponent<IcwScreenText>();
+        float dpi = Screen.dpi;
+        if (dpi == 0) dpi = Mathf.Min(Screen.currentResolution.height, Screen.currentResolution.width) / 3;
+        float positionsensitivity = dpi / 100;
+        serviceline.nameofvalue = positionsensitivity.ToString()+ " | " + dpi;
+        serviceline.valuechangespeed = 10;
+        serviceline.numline = 2;
+        */
     }
     public void AddScores(int value, Vector3 position = default, bool keepunique = false, string comment = "") 
     {

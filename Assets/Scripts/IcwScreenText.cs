@@ -29,8 +29,6 @@ public class IcwScreenText : MonoBehaviour
         float canvaswidth = canvas.GetComponent<RectTransform>().rect.width;
         scoretextmeshobject.ForceMeshUpdate();
         float lineheight = scoretextmeshobject.textInfo.lineInfo[0].lineHeight;
-        //scoretextmeshobject.textInfo.
-        //Debug.LogWarning("LineHeight " + scoretextmeshobject.textInfo.lineInfo[0].lineHeight.ToString());
         this.gameObject.transform.position = new Vector3(canvaswidth / 20, canvasheight - canvasheight / 20 - lineheight * i, 0);
     }
 
@@ -62,6 +60,8 @@ public class IcwScreenText : MonoBehaviour
         if (screenvalue != value)
         {
             int scoreschange = Mathf.RoundToInt(Mathf.Clamp(value - screenvalue, -1, 1) * valuechangespeed * Time.deltaTime);
+            if (scoreschange == 0) 
+                scoreschange = Mathf.Clamp(value - screenvalue, -1, 1);
             if (Mathf.Abs(scoreschange) > Mathf.Abs(value - screenvalue))
                 scoreschange = value - screenvalue;
             screenvalue += scoreschange;
