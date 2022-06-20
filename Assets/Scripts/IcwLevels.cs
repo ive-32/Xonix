@@ -11,15 +11,7 @@ public class IcwLevels : MonoBehaviour
     public GameObject[] enemypool;
     public Sprite[] backgroundpool;
 
-    public static int EnemyByName(string name) 
-    { 
-        Dictionary<string, int> dict = new Dictionary<string, int>() 
-        {{"Enemy", 0}, {"EnemyDestroyer", 1}, {"EnemySuperDestroyer", 2}};
-        int value = -1;
-        dict.TryGetValue(name, out value);
-        return value; 
-    }
-
+    
     public xmlLevel[] xmllevel;
     public void LoadLevelInfo()
     {
@@ -38,26 +30,29 @@ public class IcwLevels : MonoBehaviour
 
     public void StartLevel()
     {
+        GameObject bckg = GameObject.Find("Background");
         if (levelnum < xmllevel.Length && levelnum >= 0)
         {
             for(int i = 0; i< xmllevel[levelnum].enemy.Length; i++ )
             {
                 int enemynumber;
-                enemynumber = EnemyByName(xmllevel[levelnum].enemy[i].name);
+                enemynumber = IcwGame.EnemyByName(xmllevel[levelnum].enemy[i].name);
                 if (enemynumber >= 0 && enemynumber < enemypool.Length)
                     Instantiate(enemypool[enemynumber]);
             }
-        } else
+            Object[] newbckg = Resources.LoadAll(xmllevel[levelnum].background, typeof(Sprite));
+            if (newbckg.Length > 0) bckg.GetComponent<UnityEngine.UI.Image>().sprite = (Sprite)newbckg[0];
+
+        }
+        else
         {
             for (int i=0; i < ((levelnum  % 10) / 3 + 2); i++)
                 Instantiate(enemypool[0]);
             for (int i = 0; (i < (levelnum % 100) / 10 / 3 + 1); i++)
                 Instantiate(enemypool[1]);
-
+            bckg.GetComponent<UnityEngine.UI.Image>().sprite = backgroundpool[Random.Range(0, 3)];
         }
-        GameObject bckg = GameObject.Find("Background");
-        //Sprite newbckg = Resources.Load<Sprite>(xmllevel[levelnum].background);
-        bckg.GetComponent<UnityEngine.UI.Image>().sprite = backgroundpool[Random.Range(0,3)]; 
+
         bckg.GetComponent<UnityEngine.UI.Image>().color = new Color(Random.Range(128, 256), Random.Range(128, 256), Random.Range(128, 256)); //Random.ColorHSV();
     }
 }

@@ -20,9 +20,9 @@ public class IcwGestures : MonoBehaviour
             position = _pos; 
             direction = _dir; 
             velocity = _vel;
-            GameObject gm = new GameObject(name.ToString() + " | " + direction.ToString() + " | " + velocity.ToString());
+            /*GameObject gm = new GameObject(name.ToString() + " | " + direction.ToString() + " | " + velocity.ToString());
             gm.transform.parent = parent.transform;
-            Object.Destroy(gm, 1);
+            Object.Destroy(gm, 1);*/
         }
     }
 
@@ -32,16 +32,16 @@ public class IcwGestures : MonoBehaviour
     private bool OnGesture = false;
     public Vector2 direction;
     public List<IcwGesture> gesturelist = new List<IcwGesture>();
-    /*[System.NonSerialized]*/ public float positionsensitivity = 3.0f;
+    [System.NonSerialized] public float positionsensitivity = 3.0f;
     [System.NonSerialized] public float timesensitivity = 0.3f;
     [System.NonSerialized] public float slideedge = 600;
 
     public bool HasGestures() { return gesturelist.Count > 0; }
-    public IcwGesture getLast() 
+    public IcwGesture getLastAndClear() 
     {
         if (gesturelist.Count == 0) return null;
         IcwGesture gest = gesturelist[gesturelist.Count - 1];
-        gesturelist.Clear(); //.RemoveAt(gesturelist.Count - 1);
+        gesturelist.Clear(); 
         return gest; 
     }
 
@@ -71,7 +71,6 @@ public class IcwGestures : MonoBehaviour
         float dpi = Screen.dpi;
         if (dpi == 0) dpi = Mathf.Min(Screen.currentResolution.height, Screen.currentResolution.width) / 3;
         positionsensitivity = dpi / 100;
-        Debug.LogWarning(dpi.ToString() + positionsensitivity.ToString());
     }
     bool DetectGestures()
     {

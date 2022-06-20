@@ -8,20 +8,31 @@ public class IcwBaseTile : MonoBehaviour
     [System.NonSerialized] public IcwGrid gridclass;
     [System.NonSerialized] public Vector3Int tilepos;
 
+    protected virtual void Awake()
+    {
+        gridclass = GameObject.Find("Grid").GetComponent<IcwGrid>();
+    }
     // Start is called before the first frame update
     protected virtual void Start()
     {
-        gridclass = GameObject.Find("Grid").GetComponent<IcwGrid>();
         tilepos = gridclass.floor.WorldToCell(transform.position);
         if (objtype != IcwGrid.FieldObjectsTypes.Empty)
             if ((tilepos.x > -1 && tilepos.x < IcwGame.sizeX) && (tilepos.y > -1 && tilepos.y < IcwGame.sizeY))
                 gridclass.fieldprojection[tilepos.x, tilepos.y] = (int)objtype;
     }
 
-    protected virtual void OnDestroy()
+    public virtual void DestroyTile()
     {
+        Object.Destroy(this.gameObject);
         if ((tilepos.x > -1 && tilepos.x < IcwGame.sizeX) && (tilepos.y > -1 && tilepos.y < IcwGame.sizeY)
             && (gridclass.fieldprojection[tilepos.x, tilepos.y] == (int)objtype))
             gridclass.fieldprojection[tilepos.x, tilepos.y] = (int)IcwGrid.FieldObjectsTypes.Empty;
     }
+
+    /*protected virtual void OnDestroy()
+    {
+        if ((tilepos.x > -1 && tilepos.x < IcwGame.sizeX) && (tilepos.y > -1 && tilepos.y < IcwGame.sizeY)
+            && (gridclass.fieldprojection[tilepos.x, tilepos.y] == (int)objtype))
+            gridclass.fieldprojection[tilepos.x, tilepos.y] = (int)IcwGrid.FieldObjectsTypes.Empty;
+    }*/
 }

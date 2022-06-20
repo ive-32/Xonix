@@ -23,22 +23,45 @@ public class IcwGame : MonoBehaviour
     [System.NonSerialized] public float targetfilled = 0.85f;
     float CurrentFilledPercent() => gridclass.FieldTiles.transform.childCount / ((sizeX - 4.0f) * (sizeY - 4.0f));
 
-    private GameObject player;
+    private IcwPlayer player;
     private IcwScores scores;
-    private int[,] tmpfieldprojection = new int[sizeX, sizeY];
-    
+    private int[,] tmpfieldprojection; //= new int[sizeX, sizeY];
+    static Dictionary<string, int> enemynames = new Dictionary<string, int>()
+        {{"enemy", 0}, {"enemydestroyer", 1}, {"enemysuperdestroyer", 2}};
 
-
-    private void Start()
+    public static int EnemyByName(string name)
     {
-        IcwLevels lvl = this.GetComponent<IcwLevels>();
-        lvl.LoadLevelInfo();
-        player = GameObject.Find("Player");
+        int value = -1;
+        enemynames.TryGetValue(name.ToLower(), out value);
+        return value;
+    }
+
+    private void Awake()
+    {
+        Debug.LogWarning(Camera.main.pixelWidth);
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            sizeX = 25;
+            sizeY = 30;
+        }
+
+        if (Application.platform == RuntimePlatform.WindowsPlayer )
+        {
+            sizeX = 40;
+            sizeY = 30;
+        }
+        player = GameObject.Find("Player").GetComponent<IcwPlayer>();
         floor = GameObject.Find("FloorTileMap").GetComponent<Tilemap>();
         grid = GameObject.Find("Grid");
         gridclass = grid.GetComponent<IcwGrid>();
         scores = GameObject.Find("Scores").GetComponent<IcwScores>();
+    }
 
+    private void Start()
+    {
+        tmpfieldprojection = new int[sizeX, sizeY];
+        IcwLevels lvl = this.GetComponent<IcwLevels>();
+        lvl.LoadLevelInfo();
         lvl.StartLevel();
     }
 
@@ -48,7 +71,7 @@ public class IcwGame : MonoBehaviour
         for (int i = childcount - 1; i>-1 ; i--)
         {
             Vector3 pos = gridclass.TraceTiles.transform.GetChild(i).position;
-            Object.Destroy(gridclass.TraceTiles.transform.GetChild(i).gameObject);
+            gridclass.TraceTiles.transform.GetChild(i).gameObject.GetComponent<IcwTraceTilePrefab>().DestroyTile();
             if (newobject != IcwGrid.FieldObjectsTypes.Empty) 
                 gridclass.AddTile(pos.x, pos.y, newobject);
         }
@@ -56,8 +79,8 @@ public class IcwGame : MonoBehaviour
 
     public void PlayerWasHit()
     {
-        player.GetComponent<IcwPlayer>().currentpos = player.GetComponent<IcwPlayer>().startpositionbeforefloat;
-        player.GetComponent<IcwPlayer>().PlayerVelocity = Vector2.zero;
+        player.currentpos = player.startpositionbeforefloat;
+        player.PlayerVelocity = Vector2.zero;
         gamestate = EnumGameState.OnEarth;
         ChangeTraceObjects();
     }
@@ -123,7 +146,7 @@ public class IcwGame : MonoBehaviour
             if (gamestate != EnumGameState.OnEarth)
             {   //Finish flow
                 Input.ResetInputAxes();
-                player.GetComponent<IcwPlayer>().PlayerVelocity = Vector2.zero;
+                player.PlayerVelocity = Vector2.zero;
                 FillFieldAfterFlow();
             }
             gamestate = EnumGameState.OnEarth;
@@ -146,7 +169,7 @@ public class IcwGame : MonoBehaviour
         Vector3Int end2dpos = floor.WorldToCell(endpos);
         if (end2dpos == start2dpos) return;
         if (gamestate == EnumGameState.OnEarth)
-            player.GetComponent<IcwPlayer>().startpositionbeforefloat = floor.GetCellCenterWorld(start2dpos);
+            player.startpositionbeforefloat = floor.GetCellCenterWorld(start2dpos);
         Vector3Int direction = end2dpos - start2dpos;
         for (int i = 1; i <= direction.magnitude; i++)
         {
@@ -167,7 +190,7 @@ public class IcwGame : MonoBehaviour
         {
             if (Input.GetKey(KeyCode.Home) || Input.GetKey(KeyCode.Escape) || Input.GetKey(KeyCode.Menu))
             {
-                Application.Quit();
+                SceneManager.LoadScene("TitleScreenScene");
                 return;
             }
         }

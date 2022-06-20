@@ -6,7 +6,7 @@ public class IcwCamera : MonoBehaviour
 {
     void Start()
     {
-        this.transform.position = new Vector3(IcwGame.sizeX / 2, IcwGame.sizeY / 2, -IcwGame.sizeX);
+        this.transform.position = new Vector3(IcwGame.sizeX / 2.0f, IcwGame.sizeY / 2.0f, -IcwGame.sizeX);
     }
 
 

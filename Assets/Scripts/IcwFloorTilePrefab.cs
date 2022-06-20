@@ -12,12 +12,21 @@ public class IcwFloorTilePrefab : IcwBaseTile
         transform.SetParent(gridclass.FieldTiles.transform);
     }
 
-    protected override void OnDestroy()
+    public override void DestroyTile()
+    {
+        base.DestroyTile();
+        GameObject gb = Instantiate(DestroyedFloorTile, this.transform.position, Quaternion.identity);
+        Animator anim = gb.GetComponent<Animator>();
+        anim.Play("DestroyFieldTile");
+        Destroy(gb, anim.GetCurrentAnimatorStateInfo(0).length);
+    }
+
+    /*protected override void OnDestroy()
     {
         base.OnDestroy();
         GameObject gb = Instantiate(DestroyedFloorTile, this.transform.position, Quaternion.identity);
         Animator anim = gb.GetComponent<Animator>();
         anim.Play("DestroyFieldTile");
         Destroy(gb, anim.GetCurrentAnimatorStateInfo(0).length);
-    }
+    }*/
 }

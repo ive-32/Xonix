@@ -10,4 +10,8 @@ public class IcwTraceTilePrefab : IcwBaseTile
         base.Start();
         transform.SetParent(gridclass.TraceTiles.transform);
     }
+    public override void DestroyTile()
+    {
+        base.DestroyTile();
+    }
 }

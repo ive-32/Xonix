@@ -18,22 +18,27 @@ public class IcwPlayer : MonoBehaviour
         set { currentpos = AttachToTile(currentpos); playervelocity = value; } 
     }
     public Vector2 currentpos = Vector2.zero;
+    [System.NonSerialized] public Vector2 inputvalues = Vector2.zero;
+    [System.NonSerialized] private int usegestures;
     private Vector2 defaultvectorfortargetpos = new Vector2(-1, -1);
     private Vector2 targetpos = new Vector2(-1, -1);
-    private GameObject game;
+    private IcwGame game;
     private IcwGestures gestures;
+
+    private void Awake()
+    {
+        game = GameObject.Find("mainGame").GetComponent<IcwGame>();
+        GameObject gestobject = GameObject.Find("Gestures");
+        if (gestobject != null) gestures = gestobject.GetComponent<IcwGestures>();
+        rg2d = this.GetComponent<Rigidbody2D>();
+    }
 
     void Start()
     {
-        game = GameObject.Find("mainGame");
-        {
-            GameObject gestobject = GameObject.Find("Gestures");
-            if (gestobject!=null) gestures = gestobject.GetComponent<IcwGestures>();
-        }
-        rg2d = this.GetComponent<Rigidbody2D>();
         transform.position = floor.GetCellCenterWorld(new Vector3Int(IcwGame.sizeX / 2, 1, 0));
         currentpos = transform.position;
         startpositionbeforefloat = currentpos;
+        usegestures = PlayerPrefs.GetInt("UseGestures");
     }
     private bool PlayerCanMove(Vector2 currentpos)
     {
@@ -60,16 +65,14 @@ public class IcwPlayer : MonoBehaviour
         return direction;
     }
 
-
-
     private void FixedUpdate()
     {
         Vector2 previouspos = currentpos;
         Vector2 vel = PlayerVelocity;
         
-        if (gestures.HasGestures())
+        if (usegestures!=0 && gestures.HasGestures())
         {
-            IcwGestures.IcwGesture gest = gestures.getLast();//.getFirst();
+            IcwGestures.IcwGesture gest = gestures.getLastAndClear();//.getFirst();
             if (gest.name == IcwGestures.GestureNames.Slide || gest.name == IcwGestures.GestureNames.Move)
             {
                 vel = CalcDirectionOfGesture(gest.direction);
@@ -80,6 +83,11 @@ public class IcwPlayer : MonoBehaviour
         {
             float x = Input.GetAxisRaw("Horizontal");
             float y = Input.GetAxisRaw("Vertical");
+            if (inputvalues.x != 0 || inputvalues.y != 0)
+            {
+                x = inputvalues.x;
+                y = inputvalues.y;
+            }
             if (x != 0 || y != 0)
                 vel = CalcDirectionOfGesture(new Vector2(x, y));
         }
@@ -90,6 +98,7 @@ public class IcwPlayer : MonoBehaviour
         if (PlayerVelocity != vel)
         {
             PlayerVelocity = vel;
+            inputvalues = Vector2.zero;
             Input.ResetInputAxes();
         }
 
@@ -98,10 +107,11 @@ public class IcwPlayer : MonoBehaviour
         {
             currentpos = previouspos;
             PlayerVelocity = Vector2.zero;
+            inputvalues = Vector2.zero;
             Input.ResetInputAxes();
         }
         
-        game.GetComponent<IcwGame>().PlayerMovingLogic(previouspos,currentpos);
+        game.PlayerMovingLogic(previouspos,currentpos);
         rg2d.MovePosition(currentpos);
     }
 }

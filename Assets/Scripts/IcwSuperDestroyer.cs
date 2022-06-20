@@ -15,7 +15,8 @@ public class IcwSuperDestroyer : IcwEnemyDestroyer
         for (int i = FieldTiles.transform.childCount-1; i>-1;  i--)
         {
             if (Vector3.Distance(FieldTiles.transform.GetChild(i).position, newpoint) < 2.2f)
-                Object.Destroy(FieldTiles.transform.GetChild(i).gameObject);
+                FieldTiles.transform.GetChild(i).gameObject.GetComponent<IcwFloorTilePrefab>().DestroyTile();
+                //Object.Destroy(FieldTiles.transform.GetChild(i).gameObject);
         }
     }
 

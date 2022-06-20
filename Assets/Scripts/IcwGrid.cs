@@ -16,7 +16,7 @@ public class IcwGrid : MonoBehaviour
     [System.NonSerialized] public GameObject FieldTiles;
     [System.NonSerialized] public GameObject TraceTiles;
     [System.NonSerialized] public Tilemap floor;
-    [System.NonSerialized] public int[,] fieldprojection = new int[IcwGame.sizeX, IcwGame.sizeY];
+    [System.NonSerialized] public int[,] fieldprojection; 
 
     private GameObject AddObjectAtTile(GameObject obj, Vector2Int _coord)
     {
@@ -57,14 +57,17 @@ public class IcwGrid : MonoBehaviour
                     fieldprojection[i, j] = (int)newvalue;
     }
 
-
-    void Start()
+    private void Awake()
     {
         floor = GameObject.Find("FloorTileMap").GetComponent<Tilemap>(); // this.gameObject.GetComponentInChildren<Tilemap>();
         BorderTiles = GameObject.Find("BorderTiles");
         FieldTiles = GameObject.Find("FieldTiles");
         TraceTiles = GameObject.Find("TraceTiles");
+    }
 
+    void Start()
+    {
+        fieldprojection = new int[IcwGame.sizeX, IcwGame.sizeY];
         for (int i = 0; i < IcwGame.sizeX; i++)
             for (int j = 0; j < IcwGame.sizeY; j++) fieldprojection[i, j] = 0;
 
@@ -81,22 +84,6 @@ public class IcwGrid : MonoBehaviour
             for (int i = IcwGame.sizeX - 2; i < IcwGame.sizeX ; i++) AddBorder(i, j);
         }
 
-        /*{
-            GameObject enemy = IcwService.GetPrefabByName("Enemy");
-            Vector2Int enemypos = new(Random.Range(3, IcwGame.sizeX - 3), Random.Range(3, IcwGame.sizeY - 3));
-            GameObject bd = AddObjectAtTile(enemy, enemypos);
-        }
-
-        {
-            GameObject enemy = IcwService.GetPrefabByName("EnemyDestroyer");
-            Vector2Int enemypos = new(Random.Range(3, IcwGame.sizeX - 3), Random.Range(3, IcwGame.sizeY - 3));
-            GameObject bd = AddObjectAtTile(enemy, enemypos);
-        }
-        {
-            GameObject enemy = IcwService.GetPrefabByName("EnemySuperDestroyer");
-            Vector2Int enemypos = new(Random.Range(3, IcwGame.sizeX - 3), Random.Range(3, IcwGame.sizeY - 3));
-            GameObject bd = AddObjectAtTile(enemy, enemypos);
-        }*/
 
 
     }

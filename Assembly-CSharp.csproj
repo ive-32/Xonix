@@ -74,6 +74,8 @@
     <Compile Include="Assets\Scripts\IcwService.cs" />
     <Compile Include="Assets\Scripts\IcwScores.cs" />
     <Compile Include="Assets\Scripts\IcwSuperDestroyer.cs" />
+    <Compile Include="Assets\Scripts\IcwUIForAndroid.cs" />
+    <Compile Include="Assets\Scripts\IcwUIStartMenu.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
