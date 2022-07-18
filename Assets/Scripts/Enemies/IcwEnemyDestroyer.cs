@@ -16,10 +16,9 @@ public class IcwEnemyDestroyer : IcwEnemy
         
         for (int i = ctp2dlist.Count-1; i>-1; i--)
         {
-            if (ctp2dlist[i].collider.gameObject.transform.parent == FieldTiles.transform)
+            if (ctp2dlist[i].collider.gameObject.transform.parent == IcwObjects.FieldTiles.transform)
             {
                 ctp2dlist[i].collider.gameObject.GetComponent<IcwFloorTilePrefab>().DestroyTile();
-                //Object.Destroy(ctp2dlist[i].collider.gameObject);
             }
             else agro++;
         }
@@ -31,14 +30,14 @@ public class IcwEnemyDestroyer : IcwEnemy
         
         if (agro > 10 && this.GetType().FullName == "IcwEnemyDestroyer" ) // only EnemyDestroyer can generate SuperDestroyer
         {
-            //Debug.LogWarning(this.name + " | " + this.GetType().FullName);
-            GameObject body = Instantiate(game.enemypool[IcwGame.EnemyByName("EnemySuperDestroyer")]);
+            GameObject body = Instantiate(IcwObjects.gameclass.enemypool[IcwGame.EnemyByName("EnemySuperDestroyer")]);
             body.transform.position = transform.position;
             IcwEnemy tmpenobj = body.GetComponent<IcwEnemy>();
             tmpenobj.rg2d.velocity = rg2d.velocity;
             tmpenobj.saveMyParameters = true;
             tmpenobj.timetolive = 5;
             tmpenobj.parent = this.gameObject;
+            tmpenobj.transform.SetParent(IcwObjects.Enemies.transform);
             agro = 0;
             this.gameObject.SetActive(false);
         }

@@ -12,11 +12,10 @@ public class IcwSuperDestroyer : IcwEnemyDestroyer
     {
         base.FixedUpdate();
         Vector3 newpoint = rg2d.position + 0.1f * Time.fixedDeltaTime * rg2d.velocity;
-        for (int i = FieldTiles.transform.childCount-1; i>-1;  i--)
+        for (int i = IcwObjects.FieldTiles.transform.childCount-1; i>-1;  i--)
         {
-            if (Vector3.Distance(FieldTiles.transform.GetChild(i).position, newpoint) < 2.2f)
-                FieldTiles.transform.GetChild(i).gameObject.GetComponent<IcwFloorTilePrefab>().DestroyTile();
-                //Object.Destroy(FieldTiles.transform.GetChild(i).gameObject);
+            if (Vector3.Distance(IcwObjects.FieldTiles.transform.GetChild(i).position, newpoint) < 2.2f)
+                IcwObjects.FieldTiles.transform.GetChild(i).gameObject.GetComponent<IcwFloorTilePrefab>().DestroyTile();
         }
     }
 

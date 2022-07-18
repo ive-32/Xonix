@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Assets.Scripts;
 
 public class IcwUIForAndroid : MonoBehaviour, IPointerDownHandler
 {
@@ -17,6 +18,14 @@ public class IcwUIForAndroid : MonoBehaviour, IPointerDownHandler
     //0 right 1 down 2 left 3 up
     [System.NonSerialized] public int UIArrowType = -1;
     IcwPlayer player;
+
+    public void Awake()
+    {
+        if (Application.platform == RuntimePlatform.WindowsPlayer)
+        {
+            this.gameObject.SetActive(false);
+        }
+    }
 
     public void Start()
     {

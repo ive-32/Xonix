@@ -146,3 +146,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f47e20fa98d7364993a882dd0f4bc61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyspeed: 3
+  rg2d: {fileID: 0}
+  parent: {fileID: 0}
+  timetolive: 10000
+  agro: 0
+  saveMyParameters: 0

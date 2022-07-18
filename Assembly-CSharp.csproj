@@ -56,26 +56,32 @@
     <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\IcwUIStartMenu.cs" />
+    <Compile Include="Assets\Scripts\Boosters\IcwBooster.cs" />
     <Compile Include="Assets\Scripts\IcwLevels.cs" />
-    <Compile Include="Assets\Scripts\IcwBorderTilePrefab.cs" />
-    <Compile Include="Assets\Scripts\IcwEnemyDestroyer.cs" />
-    <Compile Include="Assets\Scripts\IcwTraceTilePrefab.cs" />
+    <Compile Include="Assets\Scripts\Tiles\IcwBorderTilePrefab.cs" />
+    <Compile Include="Assets\Scripts\Enemies\IcwEnemyDestroyer.cs" />
+    <Compile Include="Assets\Scripts\Tiles\IcwTraceTilePrefab.cs" />
     <Compile Include="Assets\Scripts\IcwScreenText.cs" />
     <Compile Include="Assets\Scripts\IcwGrid.cs" />
+    <Compile Include="Assets\Scripts\IcwObjects.cs" />
+    <Compile Include="Assets\Scripts\Boosters\IcwShieldBooster.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\Scripts\IcwGame.cs" />
     <Compile Include="Assets\Scripts\IcwGestures.cs" />
-    <Compile Include="Assets\Scripts\IcwFloorTilePrefab.cs" />
-    <Compile Include="Assets\Scripts\IcwBaseTile.cs" />
+    <Compile Include="Assets\Scripts\Tiles\IcwFloorTilePrefab.cs" />
+    <Compile Include="Assets\Scripts\Tiles\IcwBaseTile.cs" />
     <Compile Include="Assets\Scripts\IcwXMLLevels.cs" />
     <Compile Include="Assets\Scripts\IcwCamera.cs" />
-    <Compile Include="Assets\Scripts\IcwEnemy.cs" />
+    <Compile Include="Assets\Scripts\Enemies\IcwEnemy.cs" />
     <Compile Include="Assets\Scripts\IcwPlayer.cs" />
     <Compile Include="Assets\Scripts\IcwService.cs" />
     <Compile Include="Assets\Scripts\IcwScores.cs" />
-    <Compile Include="Assets\Scripts\IcwSuperDestroyer.cs" />
     <Compile Include="Assets\Scripts\IcwUIForAndroid.cs" />
-    <Compile Include="Assets\Scripts\IcwUIStartMenu.cs" />
+    <Compile Include="Assets\Scripts\Enemies\IcwSuperDestroyer.cs" />
+    <Compile Include="Assets\Scripts\Boosters\IcwActiveBoosters.cs" />
+    <Compile Include="Assets\Scripts\IcwPlayerLogic.cs" />
+    <Compile Include="Assets\Scripts\Boosters\IcwSpeedUpBooster.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

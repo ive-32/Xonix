@@ -17,48 +17,33 @@ public class IcwScores : MonoBehaviour
     }
 
     private List<AtomicScoreShift> scoreshifts = new List<AtomicScoreShift>();
-    public IcwScreenText scoresobject;
-    public IcwScreenText filledpercentsobject;
-    public IcwScreenText serviceline;
+    public GameObject scoresValueObject;
+    public GameObject completedValueObject;
+    public GameObject livesValueObject;
 
-    public GameObject screentext;
     public GameObject splashscores;
 
-   
+    [System.NonSerialized] public IcwScreenText scores;
+    [System.NonSerialized] public IcwScreenText lives;
+    [System.NonSerialized] public IcwScreenText completed;
+
     public int Scores 
     { 
-        get { if (scoresobject != null) return scoresobject.value; else return 0; } 
-        set { if (scoresobject != null) scoresobject.value = value; } 
+        get { if (scores != null) return scores.value; else return 0; } 
+        set { if (scores != null) scores.value = value; } 
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        GameObject body = Instantiate(screentext); 
-        scoresobject = body.GetComponent<IcwScreenText>();
-        scoresobject.nameofvalue = "Scores";
-        scoresobject.numline = 0;
-
-        body = Instantiate(screentext);
-        filledpercentsobject = body.GetComponent<IcwScreenText>();
-        filledpercentsobject.nameofvalue = "Completed %";
-        filledpercentsobject.valuechangespeed = 10;
-        filledpercentsobject.numline = 1;
-
-        /*body = Instantiate(screentext);
-        serviceline = body.GetComponent<IcwScreenText>();
-        float dpi = Screen.dpi;
-        if (dpi == 0) dpi = Mathf.Min(Screen.currentResolution.height, Screen.currentResolution.width) / 3;
-        float positionsensitivity = dpi / 100;
-        serviceline.nameofvalue = positionsensitivity.ToString()+ " | " + dpi;
-        serviceline.valuechangespeed = 10;
-        serviceline.numline = 2;
-        */
+        scores = scoresValueObject.GetComponent<IcwScreenText>();
+        lives = livesValueObject.GetComponent<IcwScreenText>();
+        completed = completedValueObject.GetComponent<IcwScreenText>();
     }
     public void AddScores(int value, Vector3 position = default, bool keepunique = false, string comment = "") 
     {
         int currenttimeforscoreshift = Time.renderedFrameCount;
-        scoresobject.value += value;
+        scores.value += value;
         AtomicScoreShift tmpscoreshift = new AtomicScoreShift();
         tmpscoreshift.currtime = Time.renderedFrameCount;
         tmpscoreshift.scoreposition = position;

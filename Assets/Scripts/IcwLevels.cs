@@ -4,6 +4,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using System.IO;
 using UnityEngine;
+using Assets.Scripts;
 
 public class IcwLevels : MonoBehaviour
 {
@@ -28,8 +29,10 @@ public class IcwLevels : MonoBehaviour
         return;
     }
 
+    
     public void StartLevel()
     {
+        IcwObjects.gridclass.PrepareLevel();
         GameObject bckg = GameObject.Find("Background");
         if (levelnum < xmllevel.Length && levelnum >= 0)
         {

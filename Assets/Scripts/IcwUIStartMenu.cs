@@ -10,6 +10,10 @@ public class IcwUIStartMenu : MonoBehaviour
     private void Awake()
     {
         toggle = GameObject.Find("Toggle").GetComponent<Toggle>();
+        if (Application.platform == RuntimePlatform.WindowsPlayer)
+        {
+            toggle.gameObject.SetActive(false);
+        }
     }
 
     private void Start()

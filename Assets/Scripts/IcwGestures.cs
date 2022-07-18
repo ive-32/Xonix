@@ -20,9 +20,6 @@ public class IcwGestures : MonoBehaviour
             position = _pos; 
             direction = _dir; 
             velocity = _vel;
-            /*GameObject gm = new GameObject(name.ToString() + " | " + direction.ToString() + " | " + velocity.ToString());
-            gm.transform.parent = parent.transform;
-            Object.Destroy(gm, 1);*/
         }
     }
 
