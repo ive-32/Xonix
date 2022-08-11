@@ -30,7 +30,7 @@ public class IcwEnemyDestroyer : IcwEnemy
         
         if (agro > 10 && this.GetType().FullName == "IcwEnemyDestroyer" ) // only EnemyDestroyer can generate SuperDestroyer
         {
-            GameObject body = Instantiate(IcwObjects.gameclass.enemypool[IcwGame.EnemyByName("EnemySuperDestroyer")]);
+            GameObject body = Instantiate(IcwObjects.levelsclass.enemypool[IcwObjects.levelsclass.EnemyByName("EnemySuperDestroyer")]);
             body.transform.position = transform.position;
             IcwEnemy tmpenobj = body.GetComponent<IcwEnemy>();
             tmpenobj.rg2d.velocity = rg2d.velocity;

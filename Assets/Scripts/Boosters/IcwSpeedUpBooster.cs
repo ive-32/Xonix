@@ -22,6 +22,7 @@ public class IcwSpeedUpBooster : IcwBooster
             IcwObjects.playerclass.playerspeed = IcwObjects.gamespeed * 6.0f;
         }
         IcwObjects.playerclass.transform.Find("SpeedUpEffect").gameObject.SetActive(true);
+        IcwObjects.scoresclass.AddScores(100, new Vector3(IcwGame.sizeX / 2, 1, 0), true, "t-t-t--turbo!!!");
     }
 
     // Update is called once per frame

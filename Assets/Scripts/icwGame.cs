@@ -1,29 +1,24 @@
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.SceneManagement;
 using UnityEngine.Animations;
 using Assets.Scripts;
-
+using UnityEngine.Advertisements;
+using UnityEngine.UI;
 
 public class IcwGame : MonoBehaviour
 {
-
-    
-    public GameObject[] enemypool;
     [System.NonSerialized] public static int sizeX = 40;
     [System.NonSerialized] public static int sizeY = 20;
     [System.NonSerialized] public float targetfilled = 0.80f;
-    float CurrentFilledPercent() => IcwObjects.FieldTiles.transform.childCount / ((sizeX - 4.0f) * (sizeY - 4.0f));
-
-    static Dictionary<string, int> enemynames = new Dictionary<string, int>()
-        {{"enemy", 0}, {"enemydestroyer", 1}, {"enemysuperdestroyer", 2}};
-
-    public static int EnemyByName(string name)
+    float CurrentFilledPercent()
     {
-        int value = -1;
-        enemynames.TryGetValue(name.ToLower(), out value);
-        return value;
+        float filled = IcwObjects.FieldTiles.transform.childCount;// / ((sizeX - 4.0f) * (sizeY - 4.0f));
+        filled += IcwObjects.BorderTiles.transform.childCount - (sizeX - 4.0f) * 4 - sizeY * 4;  // ((sizeX - 4.0f) * (sizeY - 4.0f));
+        filled /= ((sizeX - 4.0f) * (sizeY - 4.0f));
+        return filled;
     }
     
 
@@ -34,6 +29,8 @@ public class IcwGame : MonoBehaviour
         IcwObjects.GameOverCanvas.SetActive(false);
         Time.timeScale = 1;
 
+        IcwObjects.IcwRewardedAdsclass.LoadAd();
+        IcwObjects.IcwInterstitialAdsclass.LoadAd();
         SetUpSize(false);
         IcwLevels lvl = this.GetComponent<IcwLevels>();
         lvl.LoadLevelInfo();
@@ -60,14 +57,35 @@ public class IcwGame : MonoBehaviour
     }
     public void NextLevel()
     {
+        IcwObjects.IcwInterstitialAdsclass.TryToShowAd();
         Time.timeScale = 1;
-        IcwLevels.levelnum++; 
+        PlayerPrefs.SetInt("CurrentLevel", PlayerPrefs.GetInt("CurrentLevel") + 1);
         SceneManager.LoadScene("GameScene");
+    }
+    public void StartGame()
+    {
+
+        IcwObjects.BeforeLevelCanvas.SetActive(false);
+        Time.timeScale = 1;
+        IcwObjects.playerlogicclass.starttime = Time.realtimeSinceStartup;
     }
 
     void Win()
     {
         IcwObjects.WinCanvas.SetActive(true);
+        string levelnum = "Level"+(PlayerPrefs.GetInt("CurrentLevel") + 1).ToString();
+
+        int stars = 0;
+        float totaltime = Time.realtimeSinceStartup - IcwObjects.playerlogicclass.starttime;
+        if (IcwObjects.playerlogicclass.lives >= 3) stars++;
+        if (IcwObjects.scoresclass.scores.value >= 5000) stars++;
+        if (totaltime <= 180) stars++;
+        PlayerPrefs.SetInt(levelnum, stars);
+
+        IcwLevelButton levelbutton = IcwObjects.WinCanvas.transform.Find("LevelButton").GetComponent<IcwLevelButton>();
+        levelbutton.FillStars(levelnum);
+        levelbutton.gameObject.GetComponent<Button>().interactable = false;
+        levelbutton.gameObject.transform.Find("Text").gameObject.GetComponent<TMPro.TextMeshProUGUI>().text = levelnum;
         Time.timeScale = 0;
     }
 
@@ -77,6 +95,11 @@ public class IcwGame : MonoBehaviour
         Time.timeScale = 0;
     }
 
+    public void ContinueGameAfterAds()
+    {
+        IcwObjects.GameOverCanvas.SetActive(false);
+        Time.timeScale = 1;
+    }
 
     private void Update()
     {

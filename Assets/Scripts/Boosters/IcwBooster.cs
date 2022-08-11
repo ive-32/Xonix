@@ -23,7 +23,7 @@ public class IcwBooster : MonoBehaviour
     }
     public bool GetByPlayer()
     {
-        return Vector3.Distance(IcwObjects.playerclass.gameObject.transform.position, this.transform.position) < 1.0f;
+        return Vector3.Distance(IcwObjects.playerclass.gameObject.transform.position, this.transform.position) < 2.0f;
     }
 
     public static bool HaveBooster(BoostersType _atype)

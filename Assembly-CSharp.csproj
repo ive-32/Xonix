@@ -56,32 +56,37 @@
     <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\IcwUIStartMenu.cs" />
+    <Compile Include="Assets\Scripts\Ads\IcwAdsBanner.cs" />
+    <Compile Include="Assets\Scripts\UI\IcwUIStartMenu.cs" />
+    <Compile Include="Assets\Scripts\Ads\IcwAdsInitializer.cs" />
     <Compile Include="Assets\Scripts\Boosters\IcwBooster.cs" />
-    <Compile Include="Assets\Scripts\IcwLevels.cs" />
+    <Compile Include="Assets\Scripts\Ads\RewardedAdsButton.cs" />
+    <Compile Include="Assets\Scripts\Levels\IcwLevels.cs" />
+    <Compile Include="Assets\Scripts\Boosters\IcwSpeedUpBooster.cs" />
     <Compile Include="Assets\Scripts\Tiles\IcwBorderTilePrefab.cs" />
     <Compile Include="Assets\Scripts\Enemies\IcwEnemyDestroyer.cs" />
     <Compile Include="Assets\Scripts\Tiles\IcwTraceTilePrefab.cs" />
-    <Compile Include="Assets\Scripts\IcwScreenText.cs" />
-    <Compile Include="Assets\Scripts\IcwGrid.cs" />
+    <Compile Include="Assets\Scripts\Enemies\IcwInvisibleMan.cs" />
+    <Compile Include="Assets\Scripts\UI\IcwScreenText.cs" />
+    <Compile Include="Assets\Scripts\Tiles\IcwGrid.cs" />
     <Compile Include="Assets\Scripts\IcwObjects.cs" />
     <Compile Include="Assets\Scripts\Boosters\IcwShieldBooster.cs" />
+    <Compile Include="Assets\Scripts\IcwPlayerLogic.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\Scripts\IcwGame.cs" />
-    <Compile Include="Assets\Scripts\IcwGestures.cs" />
+    <Compile Include="Assets\Scripts\UI\IcwGestures.cs" />
     <Compile Include="Assets\Scripts\Tiles\IcwFloorTilePrefab.cs" />
     <Compile Include="Assets\Scripts\Tiles\IcwBaseTile.cs" />
-    <Compile Include="Assets\Scripts\IcwXMLLevels.cs" />
+    <Compile Include="Assets\Scripts\Levels\IcwXMLLevels.cs" />
     <Compile Include="Assets\Scripts\IcwCamera.cs" />
     <Compile Include="Assets\Scripts\Enemies\IcwEnemy.cs" />
     <Compile Include="Assets\Scripts\IcwPlayer.cs" />
     <Compile Include="Assets\Scripts\IcwService.cs" />
-    <Compile Include="Assets\Scripts\IcwScores.cs" />
-    <Compile Include="Assets\Scripts\IcwUIForAndroid.cs" />
+    <Compile Include="Assets\Scripts\UI\IcwScores.cs" />
+    <Compile Include="Assets\Scripts\UI\IcwUIForAndroid.cs" />
     <Compile Include="Assets\Scripts\Enemies\IcwSuperDestroyer.cs" />
-    <Compile Include="Assets\Scripts\Boosters\IcwActiveBoosters.cs" />
-    <Compile Include="Assets\Scripts\IcwPlayerLogic.cs" />
-    <Compile Include="Assets\Scripts\Boosters\IcwSpeedUpBooster.cs" />
+    <Compile Include="Assets\Scripts\Ads\IcwInterstitialAds.cs" />
+    <Compile Include="Assets\Scripts\Levels\IcwLevelButton.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
@@ -342,14 +347,14 @@
     <Reference Include="UnityEditor.UnityConnectModule">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.3.1f1\Editor\Data\Managed\UnityEngine\UnityEditor.UnityConnectModule.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.Burst.Cecil.Pdb">
+      <HintPath>Library\PackageCache\com.unity.burst@1.6.5\Unity.Burst.CodeGen\Unity.Burst.Cecil.Pdb.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.Burst.Unsafe">
       <HintPath>Library\PackageCache\com.unity.burst@1.6.5\Unity.Burst.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Burst.Cecil.Mdb">
       <HintPath>Library\PackageCache\com.unity.burst@1.6.5\Unity.Burst.CodeGen\Unity.Burst.Cecil.Mdb.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Burst.Cecil.Pdb">
-      <HintPath>Library\PackageCache\com.unity.burst@1.6.5\Unity.Burst.CodeGen\Unity.Burst.Cecil.Pdb.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Burst.Cecil">
       <HintPath>Library\PackageCache\com.unity.burst@1.6.5\Unity.Burst.CodeGen\Unity.Burst.Cecil.dll</HintPath>
@@ -753,6 +758,9 @@
     <Reference Include="Unity.VisualScripting.State.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.VisualScripting.State.Editor.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.Advertisements">
+      <HintPath>Library\ScriptAssemblies\UnityEngine.Advertisements.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.2D.IK.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.2D.IK.Editor.dll</HintPath>
     </Reference>
@@ -881,6 +889,9 @@
     </Reference>
     <Reference Include="Unity.2D.SpriteShape.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.2D.SpriteShape.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Advertisements.Editor">
+      <HintPath>Library\ScriptAssemblies\UnityEngine.Advertisements.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.AdaptivePerformance.Profiler.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.AdaptivePerformance.Profiler.Editor.dll</HintPath>

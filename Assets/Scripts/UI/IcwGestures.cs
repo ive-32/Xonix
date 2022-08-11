@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Assets.Scripts;
+using TMPro;
 
 public class IcwGestures : MonoBehaviour
 {
@@ -67,7 +69,8 @@ public class IcwGestures : MonoBehaviour
     {
         float dpi = Screen.dpi;
         if (dpi == 0) dpi = Mathf.Min(Screen.currentResolution.height, Screen.currentResolution.width) / 3;
-        positionsensitivity = dpi / 100;
+        positionsensitivity = dpi / 50;
+
     }
     bool DetectGestures()
     {
@@ -153,6 +156,17 @@ public class IcwGestures : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        DetectGestures();    
+        DetectGestures();
+        /*TextMeshProUGUI text = GameObject.Find("BackGroundCanvas").gameObject.transform.Find("ScoresPanel").gameObject.transform.Find("Gests").GetComponent<TextMeshProUGUI>();
+        string str = "";
+
+        foreach (var item in gesturelist)
+        {
+            if (item.name == GestureNames.Tap) str += "t";
+            if (item.name == GestureNames.Move) str += "m";
+            if (item.name == GestureNames.Slide) str += "s";
+
+        }
+        text.text = str;*/
     }
 }

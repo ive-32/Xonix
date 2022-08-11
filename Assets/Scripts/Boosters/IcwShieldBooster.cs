@@ -5,13 +5,13 @@ using Assets.Scripts;
 
 public class IcwShieldBooster : IcwBooster 
 {
-    //private GameObject previoustracetileprefab;
-
+    public IcwGrid.FieldObjectsTypes newtracetile;
+    private IcwGrid.FieldObjectsTypes prevoiustracetile;
     public override void Start()
     {
         base.Start();
         objtype = BoostersType.Shield;
-        //previoustracetileprefab = IcwObjects.gridclass.tracetileprefab;
+
     }
 
     public override void ApplyEffect()
@@ -19,9 +19,9 @@ public class IcwShieldBooster : IcwBooster
         if (!HaveBooster(this.objtype))
         {
             IcwObjects.playerclass.transform.Find("ShieldEffect").gameObject.SetActive(true);
-            //previoustracetileprefab = IcwObjects.gridclass.tracetileprefab;
-            //IcwObjects.gridclass.tracetileprefab = IcwObjects.gridclass.fieldtileprefab;
-            IcwObjects.playerlogicclass.currenttracetileobject = IcwGrid.FieldObjectsTypes.Field;
+            prevoiustracetile = IcwObjects.playerlogicclass.currenttracetileobject;
+            IcwObjects.playerlogicclass.currenttracetileobject = newtracetile;
+            IcwObjects.scoresclass.AddScores(100, new Vector3(IcwGame.sizeX / 2, 1, 0), true, "Iron\nButt\nnow");
         }
     }
 
@@ -37,8 +37,7 @@ public class IcwShieldBooster : IcwBooster
         if (!OnField)
         {
             IcwObjects.playerclass.transform.Find("ShieldEffect").gameObject.SetActive(false);
-            //IcwObjects.gridclass.tracetileprefab = previoustracetileprefab;
-            IcwObjects.playerlogicclass.currenttracetileobject = IcwGrid.FieldObjectsTypes.Trace;
+            IcwObjects.playerlogicclass.currenttracetileobject = prevoiustracetile;
         }
     }
 }

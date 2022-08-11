@@ -12,7 +12,9 @@ public class IcwPlayerLogic : MonoBehaviour
     [System.NonSerialized] public EnumPlayerState playerstate = EnumPlayerState.OnEarth;
     public IcwGrid.FieldObjectsTypes currenttracetileobject = IcwGrid.FieldObjectsTypes.Trace;
     [System.NonSerialized] public int lives;
+    [System.NonSerialized] public float starttime;
 
+    public bool PlayerOnEarth() => playerstate == EnumPlayerState.OnEarth;
 
     private void FillFromPoint(Vector3Int startpoint, int value)
     {
@@ -71,6 +73,7 @@ public class IcwPlayerLogic : MonoBehaviour
     }
 
 
+
     public void PlayerOnTile(int x, int y)
     {
         if (IcwObjects.gridclass.fieldprojection[x, y] != 0)
@@ -78,7 +81,7 @@ public class IcwPlayerLogic : MonoBehaviour
             if (playerstate != EnumPlayerState.OnEarth)
             {   //Finish flow
                 //Input.ResetInputAxes();
-                IcwObjects.playerclass.PlayerVelocity = Vector2.zero;
+                //IcwObjects.playerclass.PlayerVelocity = Vector2.zero;
                 FillFieldAfterFlow();
             }
             playerstate = EnumPlayerState.OnEarth;

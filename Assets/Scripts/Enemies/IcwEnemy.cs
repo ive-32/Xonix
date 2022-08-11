@@ -18,6 +18,8 @@ namespace Assets.Scripts
         public float agro = 0;
         public bool saveMyParameters = false;
 
+        
+
 
         protected virtual void Awake()
         {

@@ -5,14 +5,23 @@ using System.Xml.Serialization;
 using System.IO;
 using UnityEngine;
 using Assets.Scripts;
+using TMPro;
 
 public class IcwLevels : MonoBehaviour
 {
-    public static int levelnum = 0;
+    public static int levelnum;
     public GameObject[] enemypool;
     public Sprite[] backgroundpool;
 
-    
+    public int EnemyByName(string name)
+    {
+        for (int i = 0; i < enemypool.Length; i++)
+        {
+            if (enemypool[i].name.ToLower() == name.ToLower()) return i;
+        }
+        return -1;
+    }
+
     public xmlLevel[] xmllevel;
     public void LoadLevelInfo()
     {
@@ -34,12 +43,13 @@ public class IcwLevels : MonoBehaviour
     {
         IcwObjects.gridclass.PrepareLevel();
         GameObject bckg = GameObject.Find("Background");
+        levelnum = PlayerPrefs.GetInt("CurrentLevel");
         if (levelnum < xmllevel.Length && levelnum >= 0)
         {
             for(int i = 0; i< xmllevel[levelnum].enemy.Length; i++ )
             {
                 int enemynumber;
-                enemynumber = IcwGame.EnemyByName(xmllevel[levelnum].enemy[i].name);
+                enemynumber = EnemyByName(xmllevel[levelnum].enemy[i].name);
                 if (enemynumber >= 0 && enemynumber < enemypool.Length)
                     Instantiate(enemypool[enemynumber]);
             }
@@ -57,6 +67,14 @@ public class IcwLevels : MonoBehaviour
         }
 
         bckg.GetComponent<UnityEngine.UI.Image>().color = new Color(Random.Range(128, 256), Random.Range(128, 256), Random.Range(128, 256)); //Random.ColorHSV();
+        Time.timeScale = 0;
+        IcwObjects.BeforeLevelCanvas.SetActive(true);
+        string descr = "";
+        descr += "Level number: " + xmllevel[levelnum].number + "\n";
+        descr += "Level name: \n" + xmllevel[levelnum].name + "\n";
+        descr += "Enemies Count: " + xmllevel[levelnum].enemy.Length.ToString();
+
+        IcwObjects.BeforeLevelCanvas.transform.Find("DescriptionText").GetComponent<TextMeshProUGUI>().text = descr;
     }
 }
 
